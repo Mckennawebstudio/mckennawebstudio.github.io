@@ -234,6 +234,7 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
                     <p><span class="lbl">Email</span><a id="email-link" href="#contact">Use the form, or tap to show email</a></p>
         </div>
         <form id="contact-form" novalidate>
+          <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
           <div class="field"><label for="c-biz">Business name</label><input id="c-biz" name="business" required></div>
           <div class="field"><label for="c-phone">Phone or email</label><input id="c-phone" name="contact" required></div>
           <div class="field"><label for="c-msg">Anything I should know?</label><textarea id="c-msg" name="message"></textarea></div>
@@ -255,15 +256,39 @@ document.getElementById("email-link").addEventListener("click", function (e) {
   this.textContent = addr();
   this.href = "mail" + "to:" + addr();
 }, { once: true });
+var WEB3FORMS_KEY = "2620d190-5cc8-4c29-8f13-6313b7e349d6";
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
+  var form = this;
   var biz = document.getElementById("c-biz").value.trim();
   var c = document.getElementById("c-phone").value.trim();
   var msg = document.getElementById("form-msg");
+  var btn = form.querySelector("button[type=submit]");
   if (!biz || !c) { msg.textContent = "Please add your business name and a phone or email."; return; }
-  var body = "Business: " + biz + "\nContact: " + c + "\n\n" + document.getElementById("c-msg").value.trim();
-  window.location.href = "mail" + "to:" + addr() + "?subject=" + encodeURIComponent("Free preview request: " + biz) + "&body=" + encodeURIComponent(body);
-  msg.textContent = "Opening your email app. If nothing happens, email " + addr() + " directly.";
+  if (document.getElementById("botcheck").checked) return;
+  btn.disabled = true;
+  msg.textContent = "Sending…";
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({
+      access_key: WEB3FORMS_KEY,
+      subject: "Free preview request: " + biz,
+      from_name: "McKenna Web Studio website",
+      business: biz,
+      contact: c,
+      message: document.getElementById("c-msg").value.trim()
+    })
+  }).then(function (r) { return r.json(); }).then(function (data) {
+    if (data.success) {
+      form.reset();
+      msg.textContent = "Thanks! Your request was sent. Bowen will get back to you soon.";
+    } else {
+      msg.textContent = "Sorry, that didn't send. Please try again, or tap the email link to reach Bowen directly.";
+    }
+  }).catch(function () {
+    msg.textContent = "Sorry, that didn't send. Check your connection and try again.";
+  }).finally(function () { btn.disabled = false; });
 });
 </script>
 </body>
