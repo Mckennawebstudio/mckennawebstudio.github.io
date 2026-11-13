@@ -4,18 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>McKenna Web Studio</title>
+<meta name="description" content="McKenna Web Studio builds simple, phone-friendly websites for local businesses. Free preview first, pay only if you love it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: a short, friendly pitch you can read off the screen during a call: offer, how it works, prices, contact. */
+/* Layout idea: one clear path for a business owner on the phone with Bowen.
+   Purpose up top, proof (sample work) next, then how it works, what's included, price, policies, questions, contact.
+   Sticky nav on every screen size so any section is one tap away. */
 :root {
   --ink: #141a2e;
   --paper: #f6f7fb;
   --panel: #ffffff;
   --line: #dde1ec;
-  --muted: #5a6280;
+  --muted: #535b78;
   --accent: #2d5bff;
+  --accent-soft: #e6ecff;
   --accent-ink: #ffffff;
   --mark: #ffe066;
   --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
@@ -25,106 +29,217 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --ink: #eef0f8; --paper: #0f1322; --panel: #171c30; --line: #2a3150;
-    --muted: #a3abc8; --accent: #6f8dff; --accent-ink: #0f1322; --mark: #6b5a12;
+    --muted: #a8b0cc; --accent: #7a96ff; --accent-soft: #1f2a52; --accent-ink: #0f1322; --mark: #6b5a12;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --ink: #eef0f8; --paper: #0f1322; --panel: #171c30; --line: #2a3150;
-  --muted: #a3abc8; --accent: #6f8dff; --accent-ink: #0f1322; --mark: #6b5a12;
+  --muted: #a8b0cc; --accent: #7a96ff; --accent-soft: #1f2a52; --accent-ink: #0f1322; --mark: #6b5a12;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 120px; }
 html, body { margin: 0; }
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.6; }
 a { color: var(--accent); }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
-h1, h2, h3 { font-family: var(--display); line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+p { margin: 0; }
+.icon { width: 24px; height: 24px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 18px; padding-bottom: 18px; flex-wrap: wrap; }
-.logo { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-.logo-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 18px; }
-nav.links { display: flex; gap: 22px; font-weight: 600; font-size: 15px; }
-nav.links a { color: var(--ink); text-decoration: none; }
-nav.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
-@media (max-width: 640px) { nav.links { display: none; } }
+/* Header and navigation */
+header.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 12px; padding-bottom: 12px; }
+.logo { font-family: var(--display); font-weight: 800; font-size: 21px; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.logo-mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+.logo-mark .icon { width: 20px; height: 20px; }
+nav.links { display: flex; gap: 4px; font-weight: 600; font-size: 15px; }
+nav.links a { color: var(--ink); text-decoration: none; padding: 8px 12px; border-radius: 999px; white-space: nowrap; }
+nav.links a:hover { background: var(--accent-soft); }
+nav.links a.active { background: var(--accent-soft); color: var(--accent); }
+.bar .btn { padding: 10px 18px; font-size: 15px; }
+@media (max-width: 860px) {
+  .bar nav.links { display: none; }
+}
+.subnav { display: none; border-top: 1px solid var(--line); }
+@media (max-width: 860px) {
+  .subnav { display: block; }
+  .subnav nav.links { overflow-x: auto; padding: 6px 12px; scrollbar-width: none; }
+  .subnav nav.links::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 420px) { .logo-text { font-size: 18px; } .bar .btn { padding: 9px 14px; } }
 
-.btn { display: inline-flex; align-items: center; font-family: var(--body); font-weight: 700; font-size: 16px; padding: 13px 22px; border-radius: 999px; border: 2px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; transition: transform .12s ease; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--body); font-weight: 700; font-size: 17px; padding: 13px 22px; border-radius: 999px; border: 2px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; transition: transform .12s ease; }
 .btn:hover { transform: translateY(-2px); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn .icon { width: 20px; height: 20px; }
 
-.hero { padding: 48px 0 56px; }
-.hero h1 { font-size: clamp(44px, 7.4vw, 88px); font-weight: 800; max-width: 14ch; }
-.hl { background: linear-gradient(transparent 58%, var(--mark) 58%); padding: 0 0.06em; }
-.hero p { font-size: 21px; color: var(--muted); max-width: 40ch; margin: 22px 0 30px; }
-.hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+/* Hero */
+.hero { padding: 56px 0 64px; }
+.hero .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; gap: 36px; } }
+.hero h1 { font-size: clamp(42px, 6.6vw, 76px); font-weight: 800; }
+.hl { background: linear-gradient(transparent 60%, var(--mark) 60%); padding: 0 0.06em; }
+.hero .lede { font-size: 21px; color: var(--muted); max-width: 40ch; margin: 22px 0 28px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; padding: 0; list-style: none; }
+.chips li { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; background: var(--panel); border: 1px solid var(--line); padding: 7px 14px; border-radius: 999px; }
+.chips .icon { width: 18px; height: 18px; color: var(--accent); }
 
-section { padding: 56px 0; }
-.kicker { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 10px; }
-h2 { font-size: clamp(34px, 4.6vw, 52px); font-weight: 800; margin-bottom: 28px; }
+.device { justify-self: center; width: min(300px, 80vw); aspect-ratio: 9 / 18.5; border-radius: 36px; background: var(--ink); padding: 12px; box-shadow: 0 30px 60px -25px rgba(20,26,46,.45); position: relative; }
+.screen { width: 100%; height: 100%; border-radius: 26px; overflow: hidden; background: #f1f0ec; color: #16202b; display: flex; flex-direction: column; font-size: 11px; }
+.s-top { background: #f2c230; padding: 18px 14px 10px; font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: .02em; }
+.s-body { padding: 14px; display: grid; gap: 10px; }
+.s-h { font-family: "Arial Narrow", Impact, sans-serif; font-weight: 900; font-size: 26px; line-height: .95; text-transform: uppercase; }
+.s-open { display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.s-open i { width: 8px; height: 8px; border-radius: 50%; background: #2f8f4e; }
+.s-btn { background: #16202b; color: #f1f0ec; text-align: center; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+.s-row { display: flex; justify-content: space-between; border-top: 1px dashed #c9c6bb; padding-top: 7px; }
+.s-row b { font-weight: 800; }
 
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: s; }
+/* Sections */
+section { padding: 64px 0; }
+section.alt { background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.kicker { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 10px; }
+.section-head { margin-bottom: 32px; max-width: 640px; }
+.section-head h2 { font-size: clamp(32px, 4.4vw, 50px); font-weight: 800; }
+.section-head p { color: var(--muted); margin-top: 12px; font-size: 19px; }
+
+/* Sample work */
+.sample { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; }
+@media (max-width: 860px) { .sample { grid-template-columns: 1fr; } }
+.browser { border-radius: 14px; border: 1px solid var(--line); overflow: hidden; background: #f1f0ec; color: #16202b; box-shadow: 0 20px 40px -24px rgba(20,26,46,.35); }
+.browser-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #e3e2dc; }
+.browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: #c9c6bb; }
+.browser-bar span { margin-left: 10px; font-size: 12px; background: #f1f0ec; padding: 3px 12px; border-radius: 6px; color: #5b6470; }
+.browser-body { padding: 22px; display: grid; gap: 12px; }
+.browser-body .s-h { font-size: 36px; }
+.feature-list { display: grid; gap: 14px; margin: 20px 0 26px; padding: 0; list-style: none; }
+.feature-list li { display: flex; gap: 12px; align-items: flex-start; }
+.feature-list .icon { color: var(--accent); margin-top: 2px; }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 0; margin: 0; list-style: none; }
 @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
-.step { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-.step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--paper); font-family: var(--display); font-weight: 800; font-size: 20px; margin-bottom: 14px; }
-.step h3 { font-size: 23px; margin-bottom: 6px; }
-.step p { margin: 0; color: var(--muted); }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 26px; display: grid; gap: 10px; align-content: start; }
+section.alt .step { background: var(--paper); }
+.step-top { display: flex; align-items: center; justify-content: space-between; }
+.step-num { font-family: var(--display); font-weight: 800; font-size: 15px; color: var(--muted); }
+.icon-tile { width: 48px; height: 48px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.step h3 { font-size: 23px; }
+.step p { color: var(--muted); }
 
-.included { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 32px; padding: 0; margin: 0; list-style: none; }
-@media (max-width: 640px) { .included { grid-template-columns: 1fr; } }
-.included li { padding: 14px 0 14px 34px; border-bottom: 1px solid var(--line); position: relative; }
-.included li::before { content: "✓"; position: absolute; left: 0; top: 13px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+/* Included */
+.included { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; padding: 0; margin: 0; list-style: none; }
+@media (max-width: 900px) { .included { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .included { grid-template-columns: 1fr; } }
+.included li { display: grid; gap: 8px; align-content: start; }
+.included h3 { font-size: 19px; font-family: var(--body); font-weight: 700; letter-spacing: 0; }
+.included p { color: var(--muted); font-size: 16px; }
 
+/* Pricing */
 .prices { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 @media (max-width: 720px) { .prices { grid-template-columns: 1fr; } }
-.price-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: grid; gap: 10px; align-content: start; }
+.price-card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 30px; display: grid; gap: 12px; align-content: start; }
 .price-card.feature { border: 2px solid var(--accent); }
 .price-card h3 { font-size: 24px; }
-.amount { font-family: var(--display); font-weight: 800; font-size: 54px; line-height: 1; font-variant-numeric: tabular-nums; }
-.amount small { font-family: var(--body); font-size: 16px; font-weight: 600; color: var(--muted); margin-left: 4px; }
-.price-card p { margin: 0; color: var(--muted); }
-.note { color: var(--muted); font-size: 15px; margin-top: 16px; }
+.amount { font-family: var(--display); font-weight: 800; font-size: 58px; line-height: 1; font-variant-numeric: tabular-nums; }
+.amount small { font-family: var(--body); font-size: 17px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.price-card ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.price-card li { display: flex; gap: 10px; color: var(--muted); font-size: 16px; }
+.price-card li .icon { width: 20px; height: 20px; color: var(--accent); margin-top: 2px; }
+.note { color: var(--muted); font-size: 16px; margin-top: 18px; }
 
-.sample { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; background: var(--ink); color: var(--paper); border-radius: 22px; padding: 32px; }
-@media (max-width: 820px) { .sample { grid-template-columns: 1fr; } }
-.sample h2 { margin-bottom: 12px; color: var(--paper); }
-.sample p { color: color-mix(in srgb, var(--paper) 78%, transparent); margin: 0 0 20px; }
-.sample .btn { border-color: var(--paper); color: var(--paper); }
-.mini { background: #f1f0ec; color: #16202b; border-radius: 12px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
-.mini-bar { background: #f2c230; font-size: 11px; font-weight: 700; padding: 5px 10px; }
-.mini-body { padding: 16px; }
-.mini-body b { font-family: "Arial Narrow", Impact, sans-serif; font-size: 30px; text-transform: uppercase; line-height: 1; display: block; }
-.mini-row { display: flex; justify-content: space-between; border-top: 1px dashed #c9c6bb; padding: 8px 0; font-size: 14px; }
-.mini-row span:last-child { font-weight: 700; }
+/* Policies */
+.policies { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 40px; padding: 0; margin: 0; list-style: none; }
+@media (max-width: 720px) { .policies { grid-template-columns: 1fr; } }
+.policies li { display: flex; gap: 14px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.policies h3 { font-family: var(--body); font-size: 18px; font-weight: 700; letter-spacing: 0; margin-bottom: 4px; }
+.policies p { color: var(--muted); font-size: 16px; }
+.policies .icon { color: var(--accent); margin-top: 3px; }
 
-.faq details { border-bottom: 1px solid var(--line); padding: 16px 0; }
-.faq summary { font-weight: 700; font-size: 18px; cursor: pointer; }
-.faq details p { margin: 10px 0 0; color: var(--muted); max-width: 65ch; }
+/* FAQ */
+.faq-tools { margin-bottom: 18px; max-width: 520px; position: relative; }
+.faq-tools .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 20px; height: 20px; }
+.faq-tools input { width: 100%; font: inherit; font-size: 17px; padding: 13px 14px 13px 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.faq details { border-bottom: 1px solid var(--line); padding: 18px 0; max-width: 760px; }
+.faq summary { font-weight: 700; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--display); font-size: 24px; line-height: 1; color: var(--accent); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { margin-top: 10px; color: var(--muted); max-width: 65ch; }
+.faq-empty { color: var(--muted); padding: 16px 0; display: none; }
 
-.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+/* Contact */
+.contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: 36px; align-items: start; }
 @media (max-width: 820px) { .contact { grid-template-columns: 1fr; } }
-.contact-info p { margin: 0 0 8px; font-size: 19px; }
-.contact-info .lbl { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-form { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 14px; }
+.contact-list { display: grid; gap: 18px; padding: 0; margin: 0; list-style: none; }
+.contact-list li { display: flex; gap: 14px; align-items: flex-start; }
+.contact-list .lbl { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.contact-list .icon-tile { width: 44px; height: 44px; }
+form { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 26px; display: grid; gap: 16px; }
 .field { display: grid; gap: 6px; }
-.field label { font-size: 14px; font-weight: 600; }
-.field input, .field textarea { font: inherit; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
-.field textarea { min-height: 90px; resize: vertical; }
-.form-msg { margin: 0; font-weight: 600; min-height: 1.4em; }
+.field label { font-size: 15px; font-weight: 600; }
+.field input, .field textarea { font: inherit; font-size: 17px; padding: 12px 13px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+.field textarea { min-height: 100px; resize: vertical; }
+.form-msg { font-weight: 600; min-height: 1.4em; }
+.hidden-trap { position: absolute; left: -9999px; }
 
-footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
-@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover { transform: none; } }
+footer { padding: 36px 0 48px; color: var(--muted); font-size: 15px; border-top: 1px solid var(--line); }
+footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: center; }
+footer nav.links a { color: var(--muted); padding: 6px 10px; }
+
+.to-top { position: fixed; right: 18px; bottom: 18px; width: 48px; height: 48px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; border: 0; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 15; }
+.to-top.show { opacity: 1; pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .to-top { transition: none; } .btn:hover { transform: none; } }
 </style>
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.9A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M16 7l3 3M14 9l2 2"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
 <header class="top">
-  <div class="wrap">
-    <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true">M</span>McKenna Web Studio</a>
-    <nav class="links" aria-label="Sections">
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="McKenna Web Studio, back to top"><span class="logo-mark"><svg class="icon"><use href="#i-layout"/></svg></span><span class="logo-text">McKenna Web Studio</span></a>
+    <nav class="links" aria-label="Main">
+      <a href="#work">Sample work</a>
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn primary" href="#contact">Free preview</a>
+  </div>
+  <div class="subnav">
+    <nav class="links" aria-label="Main (mobile)">
+      <a href="#work">Sample work</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -133,111 +248,182 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
 <main id="top">
   <section class="hero">
     <div class="wrap">
-      <h1>Websites for <span class="hl">local businesses</span>.</h1>
-      <p>I make simple, good-looking websites for local shops and services. I build a free preview of your site first, and you only pay if you love it.</p>
-      <div class="actions">
-        <a class="btn primary" href="#contact">Get a free preview</a>
-        <a class="btn" href="#pricing">See pricing</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="how">
-    <div class="wrap">
-      <p class="kicker">How it works</p>
-      <h2>Three steps, no risk</h2>
-      <div class="steps">
-        <div class="step"><h3>I build a free preview</h3><p>Using your public info like your Google listing, hours and services, I make a preview of your new site.</p></div>
-        <div class="step"><h3>You take a look</h3><p>I text or email you the link. Tell me what to change. If you don't like it, you owe nothing.</p></div>
-        <div class="step"><h3>We go live</h3><p>I put the site on your own web address and keep it updated when your hours or prices change.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <p class="kicker">What you get</p>
-      <h2>Everything a small business needs</h2>
-      <ul class="included">
-        <li>Looks great on phones, where most customers search</li>
-        <li>Tap-to-call button and directions</li>
-        <li>Your hours, services and prices</li>
-        <li>Your best Google reviews</li>
-        <li>A contact form that emails you</li>
-        <li>Your own web address, like yourshop.com</li>
-        <li>Updates when things change</li>
-        <li>Help getting found on Google</li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="pricing">
-    <div class="wrap">
-      <p class="kicker">Pricing</p>
-      <h2>Simple, honest prices</h2>
-      <div class="prices">
-        <div class="price-card feature">
-          <h3>Website setup</h3>
-          <div class="amount">$300<small>one time</small></div>
-          <p>Design, writing, photos you send me, and putting it live on your web address.</p>
+      <div>
+        <h1>Simple websites for <span class="hl">local businesses</span>.</h1>
+        <p class="lede">I'm Bowen. I build clean, phone-friendly websites for local shops, restaurants and services. You see a free preview of your site first, and you only pay if you love it.</p>
+        <div class="actions">
+          <a class="btn primary" href="#contact">Get my free preview <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <a class="btn" href="#work">See a sample site</a>
         </div>
-        <div class="price-card">
-          <h3>Hosting &amp; updates</h3>
-          <div class="amount">$25<small>/ month</small></div>
-          <p>Keeps your site online and covers small changes like new hours, prices or photos.</p>
-        </div>
+        <ul class="chips" aria-label="Quick facts">
+          <li><svg class="icon"><use href="#i-eye"/></svg>Free preview</li>
+          <li><svg class="icon"><use href="#i-x"/></svg>No contracts</li>
+          <li><svg class="icon"><use href="#i-key"/></svg>You own your web address</li>
+        </ul>
       </div>
-      <p class="note">Your web address (about $12 a year) is registered in your business's name, so you always own it.</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <div class="sample">
-        <div>
-          <p class="kicker" style="color:var(--mark)">Sample work</p>
-          <h2>See an example</h2>
-          <p>Here's a sample site I made for a fictional auto repair shop. It shows the kind of site your business could have.</p>
-          <a class="btn" href="sample.html">View the sample site</a>
-        </div>
-        <div class="mini" aria-hidden="true">
-          <div class="mini-bar">Sample site</div>
-          <div class="mini-body">
-            <b>Straight answers.<br>Fair prices.</b>
-            <div class="mini-row" style="margin-top:12px"><span>Synthetic oil change</span><span>$69.95</span></div>
-            <div class="mini-row"><span>Smog check</span><span>$59.75</span></div>
-            <div class="mini-row"><span>Brake pads, per axle</span><span>from $189</span></div>
+      <div class="device" aria-hidden="true">
+        <div class="screen">
+          <div class="s-top">Ortega's Auto Repair</div>
+          <div class="s-body">
+            <div class="s-h">Straight answers. Fair prices.</div>
+            <div class="s-open"><i></i>Open now · until 6:00 pm</div>
+            <div class="s-btn">Call (555) 014-2200</div>
+            <div class="s-row"><span>Oil change</span><b>$69.95</b></div>
+            <div class="s-row"><span>Smog check</span><b>$59.75</b></div>
+            <div class="s-row"><span>Brake pads</span><b>from $189</b></div>
+            <div class="s-row"><span>Diagnostic</span><b>$95</b></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="faq">
-    <div class="wrap">
-      <p class="kicker">Questions</p>
-      <h2>Common questions</h2>
-      <details><summary>I already have a Facebook page. Why do I need a website?</summary><p>Lots of customers search Google, not Facebook. A website shows up in search, looks more professional, and puts your hours, prices and phone number in one place.</p></details>
-      <details><summary>How long does it take?</summary><p>Your free preview is usually ready in a day or two. Once you say yes, the site can be live within a week.</p></details>
-      <details><summary>What do I need to do?</summary><p>Not much. Send me any photos you'd like on the site and check that your info is right. I handle the rest.</p></details>
-      <details><summary>What if I want to cancel?</summary><p>No long contracts. If you stop the monthly plan, the web address is still yours.</p></details>
+  <section id="work" class="alt">
+    <div class="wrap sample">
+      <div class="browser" aria-hidden="true">
+        <div class="browser-bar"><i></i><i></i><i></i><span>ortegasauto.com</span></div>
+        <div class="browser-body">
+          <div class="s-h">Straight answers.<br>Fair prices.</div>
+          <div class="s-open"><i></i>Open now · until 6:00 pm</div>
+          <div class="s-row"><span>Synthetic oil change</span><b>$69.95</b></div>
+          <div class="s-row"><span>California smog check</span><b>$59.75</b></div>
+          <div class="s-row"><span>Brake pads, per axle</span><b>from $189</b></div>
+        </div>
+      </div>
+      <div>
+        <p class="kicker">Sample work</p>
+        <h2 style="font-size:clamp(32px,4.4vw,50px)">See what your site could look like</h2>
+        <ul class="feature-list">
+          <li><svg class="icon"><use href="#i-call"/></svg><span>A big call button, so customers reach you in one tap.</span></li>
+          <li><svg class="icon"><use href="#i-clock"/></svg><span>An "Open now" sign that updates on its own from your hours.</span></li>
+          <li><svg class="icon"><use href="#i-search"/></svg><span>A price list customers can search, so they find what they need fast.</span></li>
+        </ul>
+        <a class="btn primary" href="sample.html">Open the sample site <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <p class="note">The sample is for a made-up auto shop. Your site would use your name, services and photos.</p>
+      </div>
     </div>
   </section>
 
-  <section id="contact">
+  <section id="how">
     <div class="wrap">
-      <p class="kicker">Contact</p>
-      <h2>Want a free preview?</h2>
-      <div class="contact">
-        <div class="contact-info">
-          <p><span class="lbl">Name</span>Bowen</p>
-                    <p><span class="lbl">Email</span><a id="email-link" href="#contact">Use the form, or tap to show email</a></p>
+      <div class="section-head">
+        <p class="kicker">How it works</p>
+        <h2>Three steps, no risk</h2>
+      </div>
+      <ol class="steps">
+        <li class="step"><div class="step-top"><span class="icon-tile"><svg class="icon"><use href="#i-eye"/></svg></span><span class="step-num">Step 1</span></div><h3>I build a free preview</h3><p>I use your public info, like your Google listing, hours and services, to make a preview of your new site.</p></li>
+        <li class="step"><div class="step-top"><span class="icon-tile"><svg class="icon"><use href="#i-edit"/></svg></span><span class="step-num">Step 2</span></div><h3>You tell me what to change</h3><p>I send you the link. Ask for any changes. If you don't like it, you owe nothing.</p></li>
+        <li class="step"><div class="step-top"><span class="icon-tile"><svg class="icon"><use href="#i-rocket"/></svg></span><span class="step-num">Step 3</span></div><h3>Your site goes live</h3><p>I put it on your own web address and keep it updated when your hours or prices change.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">What you get</p>
+        <h2>Everything a local business needs</h2>
+        <p>No extras you'll never use. Just what helps customers find you and contact you.</p>
+      </div>
+      <ul class="included">
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-phone"/></svg></span><h3>Works on phones</h3><p>Most customers search on their phone. Your site looks right on any screen.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-call"/></svg></span><h3>Tap to call</h3><p>Your phone number and directions are always one tap away.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-clock"/></svg></span><h3>Hours and prices</h3><p>Customers see when you're open and what things cost.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-star"/></svg></span><h3>Your best reviews</h3><p>Real reviews from your Google page, shown up front.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-mail"/></svg></span><h3>A contact form</h3><p>Messages from customers go straight to your email.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-globe"/></svg></span><h3>Your own address</h3><p>A web address like yourshop.com, in your business's name.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-edit"/></svg></span><h3>Updates included</h3><p>New hours, prices or photos? Send them and I'll update the site.</p></li>
+        <li><span class="icon-tile"><svg class="icon"><use href="#i-search"/></svg></span><h3>Found on Google</h3><p>Set up so search engines can read your name, services and location.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Pricing</p>
+        <h2>Simple, honest prices</h2>
+      </div>
+      <div class="prices">
+        <div class="price-card feature">
+          <h3>Website setup</h3>
+          <div class="amount">$300<small>one time</small></div>
+          <ul>
+            <li><svg class="icon"><use href="#i-check"/></svg>Design and writing</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Your photos, hours, services and reviews</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Put live on your web address</li>
+          </ul>
         </div>
+        <div class="price-card">
+          <h3>Hosting and updates</h3>
+          <div class="amount">$25<small>/ month</small></div>
+          <ul>
+            <li><svg class="icon"><use href="#i-check"/></svg>Keeps your site online</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Small changes like new hours, prices or photos</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>Cancel any time</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Your web address costs about $12 a year and is registered in your business's name.</p>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Policies</p>
+        <h2>The fine print, in plain English</h2>
+      </div>
+      <ul class="policies">
+        <li><svg class="icon"><use href="#i-card"/></svg><div><h3>Pay only after you approve</h3><p>You don't pay the setup fee until you've seen your site and said yes.</p></div></li>
+        <li><svg class="icon"><use href="#i-x"/></svg><div><h3>No long contracts</h3><p>The monthly plan is month to month. Stop whenever you want.</p></div></li>
+        <li><svg class="icon"><use href="#i-key"/></svg><div><h3>You own your address and content</h3><p>Your web address, words and photos belong to your business, even if you leave.</p></div></li>
+        <li><svg class="icon"><use href="#i-shield"/></svg><div><h3>Customer messages go to you</h3><p>Your site's contact form sends messages straight to your own email.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Questions</p>
+        <h2>Common questions</h2>
+      </div>
+      <div class="faq-tools">
+        <svg class="icon"><use href="#i-search"/></svg>
+        <label for="faq-search" class="hidden-trap">Search questions</label>
+        <input id="faq-search" type="search" placeholder="Search questions, like price or Facebook">
+      </div>
+      <div id="faq-list">
+        <details><summary>I already have a Facebook page. Why do I need a website?</summary><p>Many customers search Google, not Facebook. A website shows up in search, looks more professional, and puts your hours, prices and phone number in one place. Your site can link to your Facebook page too.</p></details>
+        <details><summary>How long does it take?</summary><p>Your free preview is usually ready in a day or two. Once you say yes, your site can be live within a week.</p></details>
+        <details><summary>What do I need to do?</summary><p>Not much. Send any photos you'd like on the site and check that your info is right. I handle the rest.</p></details>
+        <details><summary>How much does it cost?</summary><p>$300 one time to set up, then $25 a month for hosting and updates. Your web address is about $12 a year.</p></details>
+        <details><summary>What if I want to cancel?</summary><p>No long contracts. If you stop the monthly plan, your web address is still yours.</p></details>
+        <details><summary>Can you update my site later?</summary><p>Yes. Send me new hours, prices or photos and I'll update your site. Small changes are included in the monthly plan.</p></details>
+      </div>
+      <p class="faq-empty" id="faq-empty">No questions match that. <a href="#contact">Ask me directly</a> and I'll answer.</p>
+    </div>
+  </section>
+
+  <section id="contact" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Contact</p>
+        <h2>Want a free preview?</h2>
+        <p>Tell me your business name and how to reach you. I'll build your preview and send you the link.</p>
+      </div>
+      <div class="contact">
+        <ul class="contact-list">
+          <li><span class="icon-tile"><svg class="icon"><use href="#i-user"/></svg></span><div><span class="lbl">Name</span>Bowen</div></li>
+          <li><span class="icon-tile"><svg class="icon"><use href="#i-mail"/></svg></span><div><span class="lbl">Email</span><a id="email-link" href="#contact">Tap to show email</a></div></li>
+          <li><span class="icon-tile"><svg class="icon"><use href="#i-clock"/></svg></span><div><span class="lbl">Preview time</span>Usually ready in a day or two</div></li>
+        </ul>
         <form id="contact-form" novalidate>
-          <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-          <div class="field"><label for="c-biz">Business name</label><input id="c-biz" name="business" required></div>
-          <div class="field"><label for="c-phone">Phone or email</label><input id="c-phone" name="contact" required></div>
-          <div class="field"><label for="c-msg">Anything I should know?</label><textarea id="c-msg" name="message"></textarea></div>
+          <input type="checkbox" name="botcheck" id="botcheck" class="hidden-trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="field"><label for="c-biz">Business name</label><input id="c-biz" name="business" autocomplete="organization" required></div>
+          <div class="field"><label for="c-phone">Your phone or email</label><input id="c-phone" name="contact" required></div>
+          <div class="field"><label for="c-msg">Anything I should know? (optional)</label><textarea id="c-msg" name="message" placeholder="Your Google listing, Facebook page, or what you'd like on the site"></textarea></div>
           <button class="btn primary" type="submit">Request my free preview</button>
           <p class="form-msg" id="form-msg" role="status"></p>
         </form>
@@ -246,7 +432,19 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
   </section>
 </main>
 
-<footer><div class="wrap">© McKenna Web Studio</div></footer>
+<footer>
+  <div class="wrap">
+    <span>© McKenna Web Studio · Updated November 2026</span>
+    <nav class="links" aria-label="Footer">
+      <a href="#work">Sample work</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">Questions</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="Back to top"><svg class="icon"><use href="#i-up"/></svg></button>
 
 <script>
 // The address is assembled in the browser so spam bots that scan the page's code can't read it.
@@ -256,6 +454,35 @@ document.getElementById("email-link").addEventListener("click", function (e) {
   this.textContent = addr();
   this.href = "mail" + "to:" + addr();
 }, { once: true });
+
+// FAQ search
+var faqInput = document.getElementById("faq-search");
+var faqItems = document.querySelectorAll("#faq-list details");
+faqInput.addEventListener("input", function () {
+  var q = this.value.trim().toLowerCase(), shown = 0;
+  faqItems.forEach(function (d) {
+    var hit = !q || d.textContent.toLowerCase().indexOf(q) !== -1;
+    d.style.display = hit ? "" : "none";
+    if (hit) shown++;
+  });
+  document.getElementById("faq-empty").style.display = shown ? "none" : "block";
+});
+
+// Highlight the section you're in, and show the back-to-top button
+var links = document.querySelectorAll("header nav.links a");
+var sections = ["work", "how", "pricing", "faq", "contact"].map(function (id) { return document.getElementById(id); });
+var toTop = document.getElementById("to-top");
+function onScroll() {
+  var y = window.scrollY + 140, current = "";
+  sections.forEach(function (s) { if (s && s.offsetTop <= y) current = s.id; });
+  links.forEach(function (a) { a.classList.toggle("active", a.getAttribute("href") === "#" + current); });
+  toTop.classList.toggle("show", window.scrollY > 600);
+}
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+toTop.addEventListener("click", function () { window.scrollTo({ top: 0 }); });
+
+// Contact form sends straight to email through Web3Forms
 var WEB3FORMS_KEY = "2620d190-5cc8-4c29-8f13-6313b7e349d6";
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -264,7 +491,7 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
   var c = document.getElementById("c-phone").value.trim();
   var msg = document.getElementById("form-msg");
   var btn = form.querySelector("button[type=submit]");
-  if (!biz || !c) { msg.textContent = "Please add your business name and a phone or email."; return; }
+  if (!biz || !c) { msg.textContent = "Please add your business name and a phone number or email."; return; }
   if (document.getElementById("botcheck").checked) return;
   btn.disabled = true;
   msg.textContent = "Sending…";
@@ -282,9 +509,9 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
   }).then(function (r) { return r.json(); }).then(function (data) {
     if (data.success) {
       form.reset();
-      msg.textContent = "Thanks! Your request was sent. Bowen will get back to you soon.";
+      msg.textContent = "Thanks! Your request was sent. I'll get back to you soon.";
     } else {
-      msg.textContent = "Sorry, that didn't send. Please try again, or tap the email link to reach Bowen directly.";
+      msg.textContent = "Sorry, that didn't send. Please try again, or tap the email link to reach me directly.";
     }
   }).catch(function () {
     msg.textContent = "Sorry, that didn't send. Check your connection and try again.";

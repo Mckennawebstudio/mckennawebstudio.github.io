@@ -4,17 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ortega's Auto Repair</title>
+<meta name="description" content="Sample website for a fictional auto repair shop. Brakes, oil changes, smog checks and diagnostics with prices up front.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: a shop's service counter. A bold sign up top, a price board, then hours and a way to reach a person. */
+/* Layout idea: a shop's service counter. Sign up top with "open now" and the phone number,
+   a searchable price board, what to expect, the shop's policies, then hours and a quote form.
+   Sticky nav plus a phone action bar so Call, Quote and Hours are always one tap away. */
 :root {
   --ink: #16202b;
   --paper: #f1f0ec;
   --panel: #ffffff;
   --line: #d6d4cc;
-  --muted: #5b6470;
+  --muted: #535c68;
   --signal: #f2c230;
   --signal-ink: #16202b;
   --ok: #2f8f4e;
@@ -27,48 +30,64 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --ink: #ecebe6; --paper: #11171e; --panel: #19222c; --line: #2c3743;
-    --muted: #9aa4ae; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
+    --muted: #a3acb6; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --ink: #ecebe6; --paper: #11171e; --panel: #19222c; --line: #2c3743;
-  --muted: #9aa4ae; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
+  --muted: #a3acb6; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 130px; }
 html, body { margin: 0; }
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.55; }
 a { color: inherit; }
+p { margin: 0; }
 :focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
 h1, h2, h3 { font-family: var(--display); line-height: 0.95; text-wrap: balance; margin: 0; text-transform: uppercase; letter-spacing: 0.01em; }
+.icon { width: 24px; height: 24px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-.demo-bar { background: var(--signal); color: var(--signal-ink); font-size: 14px; font-weight: 600; text-align: center; padding: 8px 16px; }
+.demo-bar { background: var(--signal); color: var(--signal-ink); font-size: 14px; font-weight: 600; text-align: center; padding: 7px 16px; }
 
-header.top { border-bottom: 1px solid var(--line); }
-header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
-.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.brand-mark { width: 40px; height: 40px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-family: var(--display); font-weight: 900; font-size: 26px; }
-.brand-name { font-family: var(--display); font-weight: 800; font-size: 26px; text-transform: uppercase; line-height: 1; }
+/* Header and navigation */
+header.top { position: sticky; top: 0; z-index: 20; background: var(--paper); border-bottom: 1px solid var(--line); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 12px; padding-bottom: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+.brand-mark { width: 42px; height: 42px; background: var(--ink); color: var(--signal); display: grid; place-items: center; flex: none; }
+.brand-name { font-family: var(--display); font-weight: 800; font-size: 25px; text-transform: uppercase; line-height: 1; }
 .brand-name small { display: block; font-family: var(--body); font-weight: 500; font-size: 12px; text-transform: none; color: var(--muted); letter-spacing: 0.02em; margin-top: 3px; }
-nav.links { display: flex; gap: 22px; font-weight: 600; font-size: 15px; }
-nav.links a { text-decoration: none; }
-nav.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
-@media (max-width: 720px) { nav.links { display: none; } }
+nav.links { display: flex; gap: 2px; font-weight: 600; font-size: 15px; }
+nav.links a { text-decoration: none; padding: 8px 12px; white-space: nowrap; border-bottom: 3px solid transparent; }
+nav.links a:hover { border-bottom-color: var(--line); }
+nav.links a.active { border-bottom-color: var(--signal); }
+.subnav { display: none; border-top: 1px solid var(--line); }
+@media (max-width: 900px) {
+  .bar nav.links { display: none; }
+  .subnav { display: block; }
+  .subnav nav.links { overflow-x: auto; padding: 2px 12px; scrollbar-width: none; }
+  .subnav nav.links::-webkit-scrollbar { display: none; }
+  .bar .call-top { display: none; }
+}
 
-.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--body); font-weight: 700; font-size: 16px; padding: 14px 22px; border: 2px solid var(--ink); text-decoration: none; cursor: pointer; background: transparent; color: var(--ink); transition: transform .12s ease; }
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--body); font-weight: 700; font-size: 17px; padding: 14px 22px; border: 2px solid var(--ink); text-decoration: none; cursor: pointer; background: transparent; color: var(--ink); transition: transform .12s ease; }
 .btn:hover { transform: translateY(-2px); }
 .btn.primary { background: var(--signal); border-color: var(--signal); color: var(--signal-ink); }
 .btn.small { padding: 9px 14px; font-size: 15px; }
+.btn .icon { width: 20px; height: 20px; }
+.call-top { white-space: nowrap; }
 
-.hero { padding: 56px 0 48px; position: relative; overflow: hidden; }
+/* Hero */
+.hero { padding: 52px 0 44px; }
 .hero .wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: end; }
 @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
-.hero h1 { font-size: clamp(64px, 11vw, 148px); font-weight: 900; }
+.hero h1 { font-size: clamp(60px, 10.5vw, 140px); font-weight: 900; }
 .hero h1 .stripe { display: inline-block; background: var(--signal); color: var(--signal-ink); padding: 0 0.12em; }
-.hero p.lede { font-size: 20px; max-width: 34ch; color: var(--muted); margin: 22px 0 28px; }
-.hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero .lede { font-size: 20px; max-width: 36ch; color: var(--muted); margin: 22px 0 28px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .hazard { height: 14px; background: repeating-linear-gradient(-45deg, var(--signal) 0 16px, var(--ink) 16px 32px); }
 
 .status-card { background: var(--panel); border: 1px solid var(--line); padding: 22px; display: grid; gap: 16px; }
@@ -76,42 +95,75 @@ nav.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
 .status.open .dot { background: var(--ok); box-shadow: 0 0 0 5px color-mix(in srgb, var(--ok) 22%, transparent); }
 .status.closed .dot { background: var(--stop); }
-.status-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 15px; }
-.status-card dt { color: var(--muted); }
-.status-card dd { margin: 0; font-weight: 600; }
-.phone-big { font-family: var(--mono); font-weight: 700; font-size: 26px; text-decoration: none; letter-spacing: -0.01em; }
+.phone-big { font-family: var(--mono); font-weight: 700; font-size: 26px; text-decoration: none; }
+.facts { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; font-size: 16px; }
+.facts li { display: flex; gap: 12px; align-items: flex-start; }
+.facts .icon { width: 20px; height: 20px; margin-top: 2px; color: var(--muted); }
+.facts b { display: block; font-weight: 700; }
+
+/* Quick answers */
+.quick { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+@media (max-width: 860px) { .quick { grid-template-columns: repeat(2, 1fr); } }
+.quick div { display: flex; gap: 14px; align-items: flex-start; padding: 24px 20px; border-right: 1px solid var(--line); }
+.quick div:last-child { border-right: 0; }
+@media (max-width: 860px) { .quick div:nth-child(2) { border-right: 0; } .quick div:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
+@media (max-width: 520px) { .quick { grid-template-columns: 1fr; } .quick div { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px 4px; } .quick div:last-child { border-bottom: 0; } }
+.quick .icon { width: 28px; height: 28px; }
+.quick b { display: block; font-size: 17px; }
+.quick span { color: var(--muted); font-size: 15px; }
 
 section { padding: 64px 0; }
 .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
 .section-head h2 { font-size: clamp(42px, 6vw, 68px); font-weight: 800; }
-.section-head p { margin: 0; color: var(--muted); max-width: 46ch; }
+.section-head p { color: var(--muted); max-width: 46ch; }
 
-.board { background: var(--ink); color: var(--paper); padding: 8px 0; }
-.board-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 16px 24px; border-bottom: 1px dashed color-mix(in srgb, var(--paper) 22%, transparent); }
+/* Price board with search */
+.board-tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.search { position: relative; flex: 1 1 280px; max-width: 420px; }
+.search .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 20px; height: 20px; }
+.search input { width: 100%; font: inherit; font-size: 17px; padding: 13px 14px 13px 44px; border: 2px solid var(--ink); background: var(--panel); color: var(--ink); border-radius: 0; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filters button { font: inherit; font-size: 15px; font-weight: 600; padding: 9px 14px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.board { background: var(--ink); color: var(--paper); padding: 6px 0; }
+.board-row { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; padding: 16px 24px; border-bottom: 1px dashed color-mix(in srgb, var(--paper) 22%, transparent); }
 .board-row:last-child { border-bottom: 0; }
-.board-row h3 { font-size: 28px; font-weight: 800; }
-.board-row p { margin: 4px 0 0; font-size: 15px; color: color-mix(in srgb, var(--paper) 72%, transparent); }
-.price { font-family: var(--mono); font-weight: 700; font-size: 22px; color: var(--signal); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.price small { font-size: 13px; font-weight: 500; color: color-mix(in srgb, var(--paper) 60%, transparent); margin-right: 6px; }
-.board-note { font-size: 14px; color: var(--muted); margin-top: 14px; }
+.board-row > .icon { width: 30px; height: 30px; color: var(--signal); }
+.board-row h3 { font-size: 27px; font-weight: 800; }
+.board-row p { margin-top: 4px; font-size: 15px; color: color-mix(in srgb, var(--paper) 74%, transparent); }
+.price { font-family: var(--mono); font-weight: 700; font-size: 22px; color: var(--signal); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+.price small { display: block; font-size: 12px; font-weight: 500; color: color-mix(in srgb, var(--paper) 62%, transparent); }
+@media (max-width: 520px) { .board-row { grid-template-columns: 1fr auto; } .board-row > .icon { display: none; } }
+.board-empty { display: none; padding: 22px 24px; }
+.board-empty a { color: var(--signal); font-weight: 700; }
+.board-note { font-size: 15px; color: var(--muted); margin-top: 14px; }
 
-.promises { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 2px solid var(--ink); }
-@media (max-width: 800px) { .promises { grid-template-columns: 1fr; } }
-.promise { padding: 26px 24px 26px 0; border-bottom: 1px solid var(--line); }
-.promise + .promise { padding-left: 24px; border-left: 1px solid var(--line); }
-@media (max-width: 800px) { .promise + .promise { padding-left: 0; border-left: 0; } }
-.promise .num { font-family: var(--display); font-weight: 900; font-size: 64px; line-height: 1; }
-.promise h3 { font-size: 24px; font-weight: 800; margin: 8px 0 8px; }
-.promise p { margin: 0; color: var(--muted); }
+/* Visit steps */
+.visit-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 0; margin: 0; list-style: none; border-top: 2px solid var(--ink); }
+@media (max-width: 860px) { .visit-steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .visit-steps { grid-template-columns: 1fr; } }
+.visit-steps li { padding: 24px 22px 24px 0; display: grid; gap: 8px; align-content: start; }
+.visit-steps .num { font-family: var(--display); font-weight: 900; font-size: 56px; line-height: 1; }
+.visit-steps h3 { font-size: 24px; font-weight: 800; }
+.visit-steps p { color: var(--muted); font-size: 16px; }
 
+/* Policies */
+.policies { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0; margin: 0; list-style: none; }
+@media (max-width: 760px) { .policies { grid-template-columns: 1fr; } }
+.policies li { background: var(--panel); border: 1px solid var(--line); padding: 22px; display: flex; gap: 16px; align-items: flex-start; }
+.policies .icon { width: 30px; height: 30px; }
+.policies h3 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.policies p { color: var(--muted); font-size: 16px; }
+
+/* Reviews */
 .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 @media (max-width: 860px) { .reviews { grid-template-columns: 1fr; } }
 .review { background: var(--panel); border: 1px solid var(--line); padding: 22px; display: grid; gap: 12px; align-content: start; }
 .stars { color: var(--signal); letter-spacing: 3px; font-size: 18px; }
-.review p { margin: 0; }
 .review .who { font-size: 14px; color: var(--muted); font-weight: 600; }
 .placeholder-tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border: 1px dashed var(--muted); color: var(--muted); padding: 3px 8px; }
 
+/* Hours, location, quote */
 .visit { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 @media (max-width: 860px) { .visit { grid-template-columns: 1fr; } }
 table.hours { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
@@ -119,91 +171,183 @@ table.hours td { padding: 12px 0; border-bottom: 1px solid var(--line); }
 table.hours td:last-child { text-align: right; font-family: var(--mono); font-weight: 500; }
 table.hours tr.today td { font-weight: 700; }
 table.hours tr.today td:first-child::after { content: "Today"; margin-left: 10px; font-family: var(--body); font-size: 12px; font-weight: 700; background: var(--signal); color: var(--signal-ink); padding: 2px 7px; vertical-align: 2px; }
-.address { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+.address { font-size: 21px; font-weight: 700; }
+.where { color: var(--muted); margin: 6px 0 20px; }
+.social { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; align-items: center; }
+.social span.lbl { font-weight: 700; font-size: 15px; margin-right: 4px; }
+.social a { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--panel); padding: 8px 12px; font-size: 15px; font-weight: 600; text-decoration: none; }
+.social .icon { width: 18px; height: 18px; }
 
 form.quote { background: var(--panel); border: 1px solid var(--line); padding: 24px; display: grid; gap: 14px; }
-form.quote h3 { font-size: 32px; font-weight: 800; }
+form.quote h3 { font-size: 34px; font-weight: 800; }
+form.quote > p { color: var(--muted); font-size: 16px; }
 .field { display: grid; gap: 6px; }
-.field label { font-size: 14px; font-weight: 600; }
-.field input, .field textarea, .field select { font: inherit; font-size: 16px; padding: 11px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 0; }
+.field label { font-size: 15px; font-weight: 600; }
+.field input, .field textarea, .field select { font: inherit; font-size: 17px; padding: 11px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 0; }
 .field textarea { min-height: 96px; resize: vertical; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 480px) { .two { grid-template-columns: 1fr; } }
-.form-msg { font-weight: 600; font-size: 15px; min-height: 1.4em; margin: 0; }
+.form-msg { font-weight: 600; font-size: 16px; min-height: 1.4em; }
 
-footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
-footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer { border-top: 1px solid var(--line); padding: 36px 0 44px; color: var(--muted); font-size: 15px; }
+footer .wrap { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; }
+@media (max-width: 760px) { footer .wrap { grid-template-columns: 1fr; } }
+footer b { color: var(--ink); display: block; margin-bottom: 6px; font-size: 16px; }
+footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+footer a { text-decoration: none; }
+footer a:hover { text-decoration: underline; }
 
-@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover { transform: none; } }
+/* Phone action bar */
+.action-bar { display: none; }
+@media (max-width: 700px) {
+  body { padding-bottom: 70px; }
+  .action-bar { display: grid; grid-template-columns: repeat(3, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--ink); color: var(--paper); border-top: 3px solid var(--signal); }
+  .action-bar a { display: grid; justify-items: center; gap: 2px; padding: 10px 6px 12px; text-decoration: none; font-size: 13px; font-weight: 700; }
+  .action-bar a + a { border-left: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); }
+  .action-bar .icon { width: 22px; height: 22px; color: var(--signal); }
+}
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } .btn:hover { transform: none; } }
 </style>
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s7 7.3 7 12.3a7 7 0 0 1-14 0c0-5 7-12.3 7-12.3z"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 14l4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M5 17a4 4 0 0 1 .8-7.9A6 6 0 0 1 17.6 9 4 4 0 0 1 18 17z"/><path d="M8 20h.01M12 20h.01M16 20h.01"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.9 4.9l14.2 14.2M2 12h20M4.9 19.1 19.1 4.9"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="12" rx="2"/><path d="M22 11v4M7 13h4M9 11v4M14 13h3"/></symbol>
+  <symbol id="i-tire" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-parts" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+  <symbol id="i-thumb" viewBox="0 0 24 24"><path d="M7 10v11H3V10zM7 10l4-8a3 3 0 0 1 3 3v4h6a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 18.6 21H7"/></symbol>
+</svg>
+
 <div class="demo-bar">Sample website for a fictional business. Every name, number and address on this page is made up.</div>
 
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="#top" aria-label="Ortega's Auto Repair home">
-      <span class="brand-mark" aria-hidden="true">O</span>
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Ortega's Auto Repair, back to top">
+      <span class="brand-mark"><svg class="icon"><use href="#i-wrench"/></svg></span>
       <span class="brand-name">Ortega's Auto Repair<small>Family owned in Alder Creek since 1998</small></span>
     </a>
-    <nav class="links" aria-label="Sections">
-      <a href="#services">Services</a>
+    <nav class="links" aria-label="Main">
+      <a href="#services">Services &amp; prices</a>
+      <a href="#visit-steps">Your visit</a>
+      <a href="#policies">Warranty</a>
       <a href="#reviews">Reviews</a>
       <a href="#visit">Hours &amp; location</a>
     </nav>
-    <a class="btn primary small" href="tel:+15550142200">Call (555) 014-2200</a>
+    <a class="btn primary small call-top" href="tel:+15550142200"><svg class="icon"><use href="#i-call"/></svg>(555) 014-2200</a>
+  </div>
+  <div class="subnav">
+    <nav class="links" aria-label="Main (mobile)">
+      <a href="#services">Services &amp; prices</a>
+      <a href="#visit-steps">Your visit</a>
+      <a href="#policies">Warranty</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Hours &amp; location</a>
+    </nav>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero">
+  <section class="hero" style="padding-bottom:44px">
     <div class="wrap">
       <div>
         <h1>Straight answers.<br><span class="stripe">Fair prices.</span></h1>
         <p class="lede">Brakes, oil changes, check-engine lights and smog checks. We call you with a price before we touch anything.</p>
         <div class="actions">
-          <a class="btn primary" href="#quote">Get a free quote</a>
-          <a class="btn" href="#services">See prices</a>
+          <a class="btn primary" href="tel:+15550142200"><svg class="icon"><use href="#i-call"/></svg>Call now</a>
+          <a class="btn" href="#quote"><svg class="icon"><use href="#i-chat"/></svg>Free quote</a>
+          <a class="btn" href="#services"><svg class="icon"><use href="#i-search"/></svg>See prices</a>
         </div>
       </div>
       <aside class="status-card" aria-label="Shop status">
         <div class="status" id="status"><span class="dot"></span><span id="status-text">Checking hours…</span></div>
         <a class="phone-big" href="tel:+15550142200">(555) 014-2200</a>
-        <dl>
-          <dt>Address</dt><dd>1420 Mill Road, Alder Creek, CA</dd>
-          <dt>Walk-ins</dt><dd>Welcome for oil changes and smog</dd>
-          <dt>Languages</dt><dd>English and Spanish</dd>
-        </dl>
+        <ul class="facts">
+          <li><svg class="icon"><use href="#i-pin"/></svg><div><b>1420 Mill Road, Alder Creek, CA</b>Next to the car wash</div></li>
+          <li><svg class="icon"><use href="#i-chat"/></svg><div><b>English and Spanish</b>Hablamos español</div></li>
+        </ul>
       </aside>
     </div>
   </section>
   <div class="hazard" aria-hidden="true"></div>
 
+  <div class="wrap quick" aria-label="Quick answers">
+    <div><svg class="icon"><use href="#i-clock"/></svg><p><b>Walk-ins welcome</b><span>For oil changes and smog checks</span></p></div>
+    <div><svg class="icon"><use href="#i-shield"/></svg><p><b>12-month warranty</b><span>12,000 miles, parts and labor</span></p></div>
+    <div><svg class="icon"><use href="#i-card"/></svg><p><b>Pay your way</b><span>Cards, cash and Apple Pay</span></p></div>
+    <div><svg class="icon"><use href="#i-call"/></svg><p><b>Price first</b><span>We call before any work</span></p></div>
+  </div>
+
   <section id="services">
     <div class="wrap">
       <div class="section-head">
         <h2>The price board</h2>
-        <p>Most common jobs, priced up front. Anything else, we inspect and call you with a number first.</p>
+        <p>Our most common jobs, priced up front. Search or pick a type to find yours.</p>
       </div>
-      <div class="board" role="list">
-        <div class="board-row" role="listitem"><div><h3>Synthetic oil change</h3><p>Up to 5 qts full synthetic, new filter, tire pressure and fluid top-off.</p></div><div class="price">$69.95</div></div>
-        <div class="board-row" role="listitem"><div><h3>California smog check</h3><p>Most 2000 and newer cars. Certificate fee included. About 20 minutes.</p></div><div class="price">$59.75</div></div>
-        <div class="board-row" role="listitem"><div><h3>Brake pads, per axle</h3><p>Quality pads, rotor inspection, caliper slide service.</p></div><div class="price"><small>from</small>$189</div></div>
-        <div class="board-row" role="listitem"><div><h3>Check-engine diagnostic</h3><p>Scan plus a technician's look. Credited toward the repair if you go ahead.</p></div><div class="price">$95</div></div>
-        <div class="board-row" role="listitem"><div><h3>A/C recharge &amp; leak check</h3><p>R-134a or R-1234yf systems. Dye test included.</p></div><div class="price"><small>from</small>$149</div></div>
+      <div class="board-tools">
+        <div class="search">
+          <svg class="icon"><use href="#i-search"/></svg>
+          <label class="sr" for="svc-search">Search services</label>
+          <input id="svc-search" type="search" placeholder="Search, like brakes or smog">
+        </div>
+        <div class="filters" role="group" aria-label="Filter services">
+          <button type="button" data-cat="all" aria-pressed="true">All</button>
+          <button type="button" data-cat="maintenance" aria-pressed="false">Maintenance</button>
+          <button type="button" data-cat="repair" aria-pressed="false">Repairs</button>
+          <button type="button" data-cat="inspection" aria-pressed="false">Inspections</button>
+        </div>
       </div>
-      <p class="board-note">Prices are for most cars and light trucks. European and diesel vehicles may cost more. Sample prices for this demo.</p>
+      <div class="board" role="list" id="board">
+        <div class="board-row" role="listitem" data-cat="maintenance" data-keys="oil change synthetic filter lube"><svg class="icon"><use href="#i-drop"/></svg><div><h3>Synthetic oil change</h3><p>Up to 5 qts full synthetic, new filter, tire pressure and fluid top-off.</p></div><div class="price">$69.95</div></div>
+        <div class="board-row" role="listitem" data-cat="inspection" data-keys="smog check emissions california dmv"><svg class="icon"><use href="#i-cloud"/></svg><div><h3>California smog check</h3><p>Most 2000 and newer cars. Certificate fee included. About 20 minutes.</p></div><div class="price">$59.75</div></div>
+        <div class="board-row" role="listitem" data-cat="repair" data-keys="brakes brake pads rotors squeak grinding"><svg class="icon"><use href="#i-disc"/></svg><div><h3>Brake pads, per axle</h3><p>Quality pads, rotor check, caliper slide service.</p></div><div class="price"><small>from</small>$189</div></div>
+        <div class="board-row" role="listitem" data-cat="inspection" data-keys="check engine light diagnostic scan warning"><svg class="icon"><use href="#i-gauge"/></svg><div><h3>Check-engine diagnostic</h3><p>Computer scan plus a technician's look. Credited toward the repair if you go ahead.</p></div><div class="price">$95</div></div>
+        <div class="board-row" role="listitem" data-cat="repair" data-keys="ac a/c air conditioning recharge cold leak"><svg class="icon"><use href="#i-snow"/></svg><div><h3>A/C recharge &amp; leak check</h3><p>Both refrigerant types. Dye test included.</p></div><div class="price"><small>from</small>$149</div></div>
+        <div class="board-row" role="listitem" data-cat="maintenance" data-keys="tire rotation balance tires wheels"><svg class="icon"><use href="#i-tire"/></svg><div><h3>Tire rotation &amp; balance</h3><p>All four wheels, plus a tread and pressure check.</p></div><div class="price">$49</div></div>
+        <div class="board-row" role="listitem" data-cat="repair" data-keys="battery dead wont start replacement test"><svg class="icon"><use href="#i-battery"/></svg><div><h3>Battery test &amp; replacement</h3><p>Free test. Installed battery with a 3-year warranty.</p></div><div class="price"><small>from</small>$169</div></div>
+        <p class="board-empty" id="board-empty">We don't list that one, but we probably do it. <a href="tel:+15550142200">Call (555) 014-2200</a> or <a href="#quote">ask for a quote</a>.</p>
+      </div>
+      <p class="board-note">Prices for most cars and light trucks, updated November 2026. European and diesel vehicles may cost more. Sample prices for this demo.</p>
     </div>
   </section>
 
-  <section>
+  <section id="visit-steps" style="padding-top:20px">
     <div class="wrap">
-      <div class="promises">
-        <div class="promise"><div class="num">01</div><h3>A call before any work</h3><p>You get a price and a plain explanation. Nothing happens to your car until you say yes.</p></div>
-        <div class="promise"><div class="num">02</div><h3>12 months, 12,000 miles</h3><p>Parts and labor warranty on every repair we do.</p></div>
-        <div class="promise"><div class="num">03</div><h3>Your old parts, back</h3><p>Ask and we'll hand you the worn parts we replaced, so you can see what was wrong.</p></div>
-      </div>
+      <div class="section-head"><h2>What happens at your visit</h2><p>No surprises, from drop-off to pickup.</p></div>
+      <ol class="visit-steps">
+        <li><span class="num">01</span><h3>Drop off or walk in</h3><p>Call ahead, or just walk in for oil changes and smog checks.</p></li>
+        <li><span class="num">02</span><h3>We inspect</h3><p>A technician checks the problem and finds the cause.</p></li>
+        <li><span class="num">03</span><h3>We call you</h3><p>You get the price and a plain explanation. Nothing happens until you say yes.</p></li>
+        <li><span class="num">04</span><h3>Pick up</h3><p>We walk you through what we did and give back your old parts if you want them.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="policies">
+    <div class="wrap">
+      <div class="section-head"><h2>Our promises</h2><p>The shop's policies, in plain English.</p></div>
+      <ul class="policies">
+        <li><svg class="icon"><use href="#i-call"/></svg><div><h3>A call before any work</h3><p>You approve every repair and its price first. No surprise charges.</p></div></li>
+        <li><svg class="icon"><use href="#i-shield"/></svg><div><h3>12 months, 12,000 miles</h3><p>Parts and labor warranty on every repair, whichever comes first.</p></div></li>
+        <li><svg class="icon"><use href="#i-parts"/></svg><div><h3>Your old parts, back</h3><p>Ask and we'll hand you the worn parts we replaced, so you can see what was wrong.</p></div></li>
+        <li><svg class="icon"><use href="#i-card"/></svg><div><h3>Pay at pickup</h3><p>Cards, cash and Apple Pay accepted. Diagnostic fee credited if you do the repair with us.</p></div></li>
+      </ul>
     </div>
   </section>
 
@@ -214,8 +358,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <p><span class="placeholder-tag">Placeholder</span> On a real site, these come straight from the shop's Google reviews.</p>
       </div>
       <div class="reviews">
-        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>Your best Google review goes here, with the customer's first name and the date.</p><div class="who">Customer name · Google review</div></article>
-        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>A second review, ideally one that mentions honest pricing or fast turnaround.</p><div class="who">Customer name · Google review</div></article>
+        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>The shop's best Google review goes here, with the customer's first name and the date.</p><div class="who">Customer name · Google review</div></article>
+        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>A second review, ideally one that mentions honest pricing or fast service.</p><div class="who">Customer name · Google review</div></article>
         <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>A third review, maybe from a smog check or a Spanish-speaking customer.</p><div class="who">Customer name · Google review</div></article>
       </div>
     </div>
@@ -227,13 +371,18 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="visit">
         <div>
           <p class="address">1420 Mill Road, Alder Creek, CA</p>
-          <p style="color:var(--muted);margin:0 0 20px">Next to the car wash on Mill Road. Parking in front and on the side.</p>
-          <table class="hours" aria-label="Opening hours">
-            <tbody id="hours-body"></tbody>
-          </table>
+          <p class="where">Next to the car wash on Mill Road. Parking in front and on the side.</p>
+          <table class="hours" aria-label="Opening hours"><tbody id="hours-body"></tbody></table>
+          <div class="social" aria-label="Find us online">
+            <span class="lbl">Find us on</span>
+            <a href="#visit" title="Link to the shop's Google page goes here"><svg class="icon"><use href="#i-star"/></svg>Google</a>
+            <a href="#visit" title="Link to the shop's Facebook page goes here"><svg class="icon"><use href="#i-thumb"/></svg>Facebook</a>
+            <a href="#visit" title="Link to the shop's Instagram goes here"><svg class="icon"><use href="#i-camera"/></svg>Instagram</a>
+          </div>
         </div>
         <form class="quote" id="quote" novalidate>
           <h3>Free quote</h3>
+          <p>Tell us what's going on and we'll call you back with a price.</p>
           <div class="two">
             <div class="field"><label for="q-name">Your name</label><input id="q-name" name="name" autocomplete="name" required></div>
             <div class="field"><label for="q-phone">Phone</label><input id="q-phone" name="phone" type="tel" autocomplete="tel" required></div>
@@ -247,9 +396,11 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
               <option>Brakes</option>
               <option>Check-engine light</option>
               <option>A/C</option>
+              <option>Tires</option>
+              <option>Battery</option>
             </select>
           </div>
-          <div class="field"><label for="q-notes">Anything else?</label><textarea id="q-notes" name="notes" placeholder="Noise when braking, started last week…"></textarea></div>
+          <div class="field"><label for="q-notes">Anything else? (optional)</label><textarea id="q-notes" name="notes" placeholder="Noise when braking, started last week…"></textarea></div>
           <button class="btn primary" type="submit">Send my request</button>
           <p class="form-msg" id="form-msg" role="status"></p>
         </form>
@@ -260,14 +411,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <footer>
   <div class="wrap">
-    <span>© Ortega's Auto Repair · 1420 Mill Road, Alder Creek, CA · (555) 014-2200</span>
-    <span>Demo site</span>
+    <div><b>Ortega's Auto Repair</b>1420 Mill Road, Alder Creek, CA<br><a href="tel:+15550142200">(555) 014-2200</a><br>Sample site · Updated November 2026</div>
+    <div><b>Hours</b>Mon–Fri 7:30 am – 6:00 pm<br>Sat 8:00 am – 2:00 pm<br>Sun closed</div>
+    <div><b>On this site</b><ul><li><a href="#services">Services &amp; prices</a></li><li><a href="#visit-steps">Your visit</a></li><li><a href="#policies">Warranty &amp; policies</a></li><li><a href="#visit">Hours &amp; location</a></li><li><a href="#quote">Free quote</a></li></ul></div>
   </div>
 </footer>
 
+<nav class="action-bar" aria-label="Quick actions">
+  <a href="tel:+15550142200"><svg class="icon"><use href="#i-call"/></svg>Call</a>
+  <a href="#quote"><svg class="icon"><use href="#i-chat"/></svg>Quote</a>
+  <a href="#visit"><svg class="icon"><use href="#i-pin"/></svg>Hours &amp; map</a>
+</nav>
+
 <script>
 (function () {
-  // 0 = Sunday. Times in 24h decimal.
+  // Hours: 0 = Sunday, times in 24h decimal
   var hours = [null, [7.5, 18], [7.5, 18], [7.5, 18], [7.5, 18], [7.5, 18], [8, 14]];
   var names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   function fmt(t) {
@@ -299,13 +457,49 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     txt.textContent = "Closed · opens " + label;
   }
 
+  // Price board search and filters
+  var rows = document.querySelectorAll("#board .board-row");
+  var input = document.getElementById("svc-search");
+  var buttons = document.querySelectorAll(".filters button");
+  var cat = "all";
+  function apply() {
+    var q = input.value.trim().toLowerCase(), shown = 0;
+    rows.forEach(function (r) {
+      var text = (r.textContent + " " + r.getAttribute("data-keys")).toLowerCase();
+      var ok = (cat === "all" || r.getAttribute("data-cat") === cat) && (!q || text.indexOf(q) !== -1);
+      r.style.display = ok ? "" : "none";
+      if (ok) shown++;
+    });
+    document.getElementById("board-empty").style.display = shown ? "none" : "block";
+  }
+  input.addEventListener("input", apply);
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      cat = b.getAttribute("data-cat");
+      buttons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      apply();
+    });
+  });
+
+  // Highlight the section you're in
+  var links = document.querySelectorAll("header nav.links a");
+  var ids = ["services", "visit-steps", "policies", "reviews", "visit"];
+  function onScroll() {
+    var y = window.scrollY + 150, current = "";
+    ids.forEach(function (id) { var el = document.getElementById(id); if (el && el.offsetTop <= y) current = id; });
+    links.forEach(function (a) { a.classList.toggle("active", a.getAttribute("href") === "#" + current); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Demo quote form
   var form = document.getElementById("quote"), msg = document.getElementById("form-msg");
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var name = document.getElementById("q-name").value.trim();
     var phone = document.getElementById("q-phone").value.trim();
     if (!name || !phone) { msg.textContent = "Please add your name and phone number so we can call you back."; return; }
-    msg.textContent = "Thanks, " + name + ". On the live site this request goes straight to the shop's email. This demo doesn't send anything.";
+    msg.textContent = "Thanks, " + name + ". On a real shop's site, this request goes straight to the shop's email. This sample doesn't send anything.";
   });
 })();
 </script>
