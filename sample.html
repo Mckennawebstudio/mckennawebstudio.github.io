@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ortega's Auto Repair</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a shop's service counter. A bold sign up top, a price board, then hours and a way to reach a person. */
+:root {
+  --ink: #16202b;
+  --paper: #f1f0ec;
+  --panel: #ffffff;
+  --line: #d6d4cc;
+  --muted: #5b6470;
+  --signal: #f2c230;
+  --signal-ink: #16202b;
+  --ok: #2f8f4e;
+  --stop: #b23a2e;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #ecebe6; --paper: #11171e; --panel: #19222c; --line: #2c3743;
+    --muted: #9aa4ae; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #ecebe6; --paper: #11171e; --panel: #19222c; --line: #2c3743;
+  --muted: #9aa4ae; --signal: #f2c230; --signal-ink: #11171e; --ok: #5cc27d; --stop: #e0685b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--display); line-height: 0.95; text-wrap: balance; margin: 0; text-transform: uppercase; letter-spacing: 0.01em; }
+
+.demo-bar { background: var(--signal); color: var(--signal-ink); font-size: 14px; font-weight: 600; text-align: center; padding: 8px 16px; }
+
+header.top { border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-mark { width: 40px; height: 40px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-family: var(--display); font-weight: 900; font-size: 26px; }
+.brand-name { font-family: var(--display); font-weight: 800; font-size: 26px; text-transform: uppercase; line-height: 1; }
+.brand-name small { display: block; font-family: var(--body); font-weight: 500; font-size: 12px; text-transform: none; color: var(--muted); letter-spacing: 0.02em; margin-top: 3px; }
+nav.links { display: flex; gap: 22px; font-weight: 600; font-size: 15px; }
+nav.links a { text-decoration: none; }
+nav.links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 720px) { nav.links { display: none; } }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--body); font-weight: 700; font-size: 16px; padding: 14px 22px; border: 2px solid var(--ink); text-decoration: none; cursor: pointer; background: transparent; color: var(--ink); transition: transform .12s ease; }
+.btn:hover { transform: translateY(-2px); }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--signal-ink); }
+.btn.small { padding: 9px 14px; font-size: 15px; }
+
+.hero { padding: 56px 0 48px; position: relative; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: end; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+.hero h1 { font-size: clamp(64px, 11vw, 148px); font-weight: 900; }
+.hero h1 .stripe { display: inline-block; background: var(--signal); color: var(--signal-ink); padding: 0 0.12em; }
+.hero p.lede { font-size: 20px; max-width: 34ch; color: var(--muted); margin: 22px 0 28px; }
+.hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hazard { height: 14px; background: repeating-linear-gradient(-45deg, var(--signal) 0 16px, var(--ink) 16px 32px); }
+
+.status-card { background: var(--panel); border: 1px solid var(--line); padding: 22px; display: grid; gap: 16px; }
+.status { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
+.status.open .dot { background: var(--ok); box-shadow: 0 0 0 5px color-mix(in srgb, var(--ok) 22%, transparent); }
+.status.closed .dot { background: var(--stop); }
+.status-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 15px; }
+.status-card dt { color: var(--muted); }
+.status-card dd { margin: 0; font-weight: 600; }
+.phone-big { font-family: var(--mono); font-weight: 700; font-size: 26px; text-decoration: none; letter-spacing: -0.01em; }
+
+section { padding: 64px 0; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+.section-head h2 { font-size: clamp(42px, 6vw, 68px); font-weight: 800; }
+.section-head p { margin: 0; color: var(--muted); max-width: 46ch; }
+
+.board { background: var(--ink); color: var(--paper); padding: 8px 0; }
+.board-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 16px 24px; border-bottom: 1px dashed color-mix(in srgb, var(--paper) 22%, transparent); }
+.board-row:last-child { border-bottom: 0; }
+.board-row h3 { font-size: 28px; font-weight: 800; }
+.board-row p { margin: 4px 0 0; font-size: 15px; color: color-mix(in srgb, var(--paper) 72%, transparent); }
+.price { font-family: var(--mono); font-weight: 700; font-size: 22px; color: var(--signal); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.price small { font-size: 13px; font-weight: 500; color: color-mix(in srgb, var(--paper) 60%, transparent); margin-right: 6px; }
+.board-note { font-size: 14px; color: var(--muted); margin-top: 14px; }
+
+.promises { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 2px solid var(--ink); }
+@media (max-width: 800px) { .promises { grid-template-columns: 1fr; } }
+.promise { padding: 26px 24px 26px 0; border-bottom: 1px solid var(--line); }
+.promise + .promise { padding-left: 24px; border-left: 1px solid var(--line); }
+@media (max-width: 800px) { .promise + .promise { padding-left: 0; border-left: 0; } }
+.promise .num { font-family: var(--display); font-weight: 900; font-size: 64px; line-height: 1; }
+.promise h3 { font-size: 24px; font-weight: 800; margin: 8px 0 8px; }
+.promise p { margin: 0; color: var(--muted); }
+
+.reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 860px) { .reviews { grid-template-columns: 1fr; } }
+.review { background: var(--panel); border: 1px solid var(--line); padding: 22px; display: grid; gap: 12px; align-content: start; }
+.stars { color: var(--signal); letter-spacing: 3px; font-size: 18px; }
+.review p { margin: 0; }
+.review .who { font-size: 14px; color: var(--muted); font-weight: 600; }
+.placeholder-tag { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border: 1px dashed var(--muted); color: var(--muted); padding: 3px 8px; }
+
+.visit { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 860px) { .visit { grid-template-columns: 1fr; } }
+table.hours { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+table.hours td { padding: 12px 0; border-bottom: 1px solid var(--line); }
+table.hours td:last-child { text-align: right; font-family: var(--mono); font-weight: 500; }
+table.hours tr.today td { font-weight: 700; }
+table.hours tr.today td:first-child::after { content: "Today"; margin-left: 10px; font-family: var(--body); font-size: 12px; font-weight: 700; background: var(--signal); color: var(--signal-ink); padding: 2px 7px; vertical-align: 2px; }
+.address { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+
+form.quote { background: var(--panel); border: 1px solid var(--line); padding: 24px; display: grid; gap: 14px; }
+form.quote h3 { font-size: 32px; font-weight: 800; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 600; }
+.field input, .field textarea, .field select { font: inherit; font-size: 16px; padding: 11px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 0; }
+.field textarea { min-height: 96px; resize: vertical; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 480px) { .two { grid-template-columns: 1fr; } }
+.form-msg { font-weight: 600; font-size: 15px; min-height: 1.4em; margin: 0; }
+
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">Sample website for a fictional business. Every name, number and address on this page is made up.</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Ortega's Auto Repair home">
+      <span class="brand-mark" aria-hidden="true">O</span>
+      <span class="brand-name">Ortega's Auto Repair<small>Family owned in Alder Creek since 1998</small></span>
+    </a>
+    <nav class="links" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Hours &amp; location</a>
+    </nav>
+    <a class="btn primary small" href="tel:+15550142200">Call (555) 014-2200</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Straight answers.<br><span class="stripe">Fair prices.</span></h1>
+        <p class="lede">Brakes, oil changes, check-engine lights and smog checks. We call you with a price before we touch anything.</p>
+        <div class="actions">
+          <a class="btn primary" href="#quote">Get a free quote</a>
+          <a class="btn" href="#services">See prices</a>
+        </div>
+      </div>
+      <aside class="status-card" aria-label="Shop status">
+        <div class="status" id="status"><span class="dot"></span><span id="status-text">Checking hours…</span></div>
+        <a class="phone-big" href="tel:+15550142200">(555) 014-2200</a>
+        <dl>
+          <dt>Address</dt><dd>1420 Mill Road, Alder Creek, CA</dd>
+          <dt>Walk-ins</dt><dd>Welcome for oil changes and smog</dd>
+          <dt>Languages</dt><dd>English and Spanish</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+  <div class="hazard" aria-hidden="true"></div>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>The price board</h2>
+        <p>Most common jobs, priced up front. Anything else, we inspect and call you with a number first.</p>
+      </div>
+      <div class="board" role="list">
+        <div class="board-row" role="listitem"><div><h3>Synthetic oil change</h3><p>Up to 5 qts full synthetic, new filter, tire pressure and fluid top-off.</p></div><div class="price">$69.95</div></div>
+        <div class="board-row" role="listitem"><div><h3>California smog check</h3><p>Most 2000 and newer cars. Certificate fee included. About 20 minutes.</p></div><div class="price">$59.75</div></div>
+        <div class="board-row" role="listitem"><div><h3>Brake pads, per axle</h3><p>Quality pads, rotor inspection, caliper slide service.</p></div><div class="price"><small>from</small>$189</div></div>
+        <div class="board-row" role="listitem"><div><h3>Check-engine diagnostic</h3><p>Scan plus a technician's look. Credited toward the repair if you go ahead.</p></div><div class="price">$95</div></div>
+        <div class="board-row" role="listitem"><div><h3>A/C recharge &amp; leak check</h3><p>R-134a or R-1234yf systems. Dye test included.</p></div><div class="price"><small>from</small>$149</div></div>
+      </div>
+      <p class="board-note">Prices are for most cars and light trucks. European and diesel vehicles may cost more. Sample prices for this demo.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="promises">
+        <div class="promise"><div class="num">01</div><h3>A call before any work</h3><p>You get a price and a plain explanation. Nothing happens to your car until you say yes.</p></div>
+        <div class="promise"><div class="num">02</div><h3>12 months, 12,000 miles</h3><p>Parts and labor warranty on every repair we do.</p></div>
+        <div class="promise"><div class="num">03</div><h3>Your old parts, back</h3><p>Ask and we'll hand you the worn parts we replaced, so you can see what was wrong.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What customers say</h2>
+        <p><span class="placeholder-tag">Placeholder</span> On a real site, these come straight from the shop's Google reviews.</p>
+      </div>
+      <div class="reviews">
+        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>Your best Google review goes here, with the customer's first name and the date.</p><div class="who">Customer name · Google review</div></article>
+        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>A second review, ideally one that mentions honest pricing or fast turnaround.</p><div class="who">Customer name · Google review</div></article>
+        <article class="review"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p>A third review, maybe from a smog check or a Spanish-speaking customer.</p><div class="who">Customer name · Google review</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <div class="section-head"><h2>Hours &amp; location</h2></div>
+      <div class="visit">
+        <div>
+          <p class="address">1420 Mill Road, Alder Creek, CA</p>
+          <p style="color:var(--muted);margin:0 0 20px">Next to the car wash on Mill Road. Parking in front and on the side.</p>
+          <table class="hours" aria-label="Opening hours">
+            <tbody id="hours-body"></tbody>
+          </table>
+        </div>
+        <form class="quote" id="quote" novalidate>
+          <h3>Free quote</h3>
+          <div class="two">
+            <div class="field"><label for="q-name">Your name</label><input id="q-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="q-phone">Phone</label><input id="q-phone" name="phone" type="tel" autocomplete="tel" required></div>
+          </div>
+          <div class="field"><label for="q-car">Year, make and model</label><input id="q-car" name="car" placeholder="2016 Honda Civic"></div>
+          <div class="field"><label for="q-service">What do you need?</label>
+            <select id="q-service" name="service">
+              <option>Not sure, something's wrong</option>
+              <option>Oil change</option>
+              <option>Smog check</option>
+              <option>Brakes</option>
+              <option>Check-engine light</option>
+              <option>A/C</option>
+            </select>
+          </div>
+          <div class="field"><label for="q-notes">Anything else?</label><textarea id="q-notes" name="notes" placeholder="Noise when braking, started last week…"></textarea></div>
+          <button class="btn primary" type="submit">Send my request</button>
+          <p class="form-msg" id="form-msg" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Ortega's Auto Repair · 1420 Mill Road, Alder Creek, CA · (555) 014-2200</span>
+    <span>Demo site</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // 0 = Sunday. Times in 24h decimal.
+  var hours = [null, [7.5, 18], [7.5, 18], [7.5, 18], [7.5, 18], [7.5, 18], [8, 14]];
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  function fmt(t) {
+    var h = Math.floor(t), m = Math.round((t - h) * 60);
+    var ap = h >= 12 ? "pm" : "am", hh = h % 12 || 12;
+    return hh + ":" + (m < 10 ? "0" : "") + m + " " + ap;
+  }
+  var now = new Date(), d = now.getDay(), t = now.getHours() + now.getMinutes() / 60;
+  var body = document.getElementById("hours-body");
+  [1, 2, 3, 4, 5, 6, 0].forEach(function (i) {
+    var tr = document.createElement("tr");
+    if (i === d) tr.className = "today";
+    var a = document.createElement("td"); a.textContent = names[i];
+    var b = document.createElement("td"); b.textContent = hours[i] ? fmt(hours[i][0]) + " – " + fmt(hours[i][1]) : "Closed";
+    tr.appendChild(a); tr.appendChild(b); body.appendChild(tr);
+  });
+  var st = document.getElementById("status"), txt = document.getElementById("status-text");
+  var h = hours[d];
+  if (h && t >= h[0] && t < h[1]) {
+    st.classList.add("open"); txt.textContent = "Open now · until " + fmt(h[1]);
+  } else {
+    st.classList.add("closed");
+    var n = d, label = "";
+    for (var k = 0; k < 7; k++) {
+      if (k === 0 && h && t < h[0]) { label = "today at " + fmt(h[0]); break; }
+      n = (n + 1) % 7;
+      if (hours[n]) { label = (k === 0 ? "tomorrow" : names[n]) + " at " + fmt(hours[n][0]); break; }
+    }
+    txt.textContent = "Closed · opens " + label;
+  }
+
+  var form = document.getElementById("quote"), msg = document.getElementById("form-msg");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("q-name").value.trim();
+    var phone = document.getElementById("q-phone").value.trim();
+    if (!name || !phone) { msg.textContent = "Please add your name and phone number so we can call you back."; return; }
+    msg.textContent = "Thanks, " + name + ". On the live site this request goes straight to the shop's email. This demo doesn't send anything.";
+  });
+})();
+</script>
+</body>
+</html>
