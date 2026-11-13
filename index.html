@@ -231,7 +231,7 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
       <div class="contact">
         <div class="contact-info">
           <p><span class="lbl">Name</span>Bowen</p>
-                    <p><span class="lbl">Email</span><a href="mailto:bowengmckenna@gmail.com">bowengmckenna@gmail.com</a></p>
+                    <p><span class="lbl">Email</span><a id="email-link" href="#contact">Use the form, or tap to show email</a></p>
         </div>
         <form id="contact-form" novalidate>
           <div class="field"><label for="c-biz">Business name</label><input id="c-biz" name="business" required></div>
@@ -248,6 +248,13 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
 <footer><div class="wrap">© McKenna Web Studio</div></footer>
 
 <script>
+// The address is assembled in the browser so spam bots that scan the page's code can't read it.
+function addr() { return ["bowengmckenna", "gmail.com"].join(String.fromCharCode(64)); }
+document.getElementById("email-link").addEventListener("click", function (e) {
+  e.preventDefault();
+  this.textContent = addr();
+  this.href = "mail" + "to:" + addr();
+}, { once: true });
 document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
   var biz = document.getElementById("c-biz").value.trim();
@@ -255,8 +262,8 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
   var msg = document.getElementById("form-msg");
   if (!biz || !c) { msg.textContent = "Please add your business name and a phone or email."; return; }
   var body = "Business: " + biz + "\nContact: " + c + "\n\n" + document.getElementById("c-msg").value.trim();
-  window.location.href = "mailto:bowengmckenna@gmail.com?subject=" + encodeURIComponent("Free preview request: " + biz) + "&body=" + encodeURIComponent(body);
-  msg.textContent = "Opening your email app. If nothing happens, email bowengmckenna@gmail.com directly.";
+  window.location.href = "mail" + "to:" + addr() + "?subject=" + encodeURIComponent("Free preview request: " + biz) + "&body=" + encodeURIComponent(body);
+  msg.textContent = "Opening your email app. If nothing happens, email " + addr() + " directly.";
 });
 </script>
 </body>
