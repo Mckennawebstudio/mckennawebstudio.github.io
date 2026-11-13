@@ -231,8 +231,7 @@ footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; border-top:
       <div class="contact">
         <div class="contact-info">
           <p><span class="lbl">Name</span>Bowen</p>
-          <p><span class="lbl">Phone</span>(add your number)</p>
-          <p><span class="lbl">Email</span>(add your email)</p>
+                    <p><span class="lbl">Email</span><a href="mailto:bowengmckenna@gmail.com">bowengmckenna@gmail.com</a></p>
         </div>
         <form id="contact-form" novalidate>
           <div class="field"><label for="c-biz">Business name</label><input id="c-biz" name="business" required></div>
@@ -255,7 +254,9 @@ document.getElementById("contact-form").addEventListener("submit", function (e) 
   var c = document.getElementById("c-phone").value.trim();
   var msg = document.getElementById("form-msg");
   if (!biz || !c) { msg.textContent = "Please add your business name and a phone or email."; return; }
-  msg.textContent = "Thanks! This form isn't connected yet. Once the site is live, requests will come straight to Bowen.";
+  var body = "Business: " + biz + "\nContact: " + c + "\n\n" + document.getElementById("c-msg").value.trim();
+  window.location.href = "mailto:bowengmckenna@gmail.com?subject=" + encodeURIComponent("Free preview request: " + biz) + "&body=" + encodeURIComponent(body);
+  msg.textContent = "Opening your email app. If nothing happens, email bowengmckenna@gmail.com directly.";
 });
 </script>
 </body>
